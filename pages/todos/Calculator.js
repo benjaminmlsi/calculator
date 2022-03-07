@@ -25,6 +25,8 @@ const style = {
     p: 4,
 };
 
+//doc: https://mui.com/components/tables/
+
 const Todolist = () => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -32,17 +34,38 @@ const Todolist = () => {
     const [value, setValue] = React.useState('');
     const [value2, setValue2] = React.useState('');
     const [row, setRow] = React.useState(Math.round(value / value2));
-    function createData(monat, betrag, aktiv) {
-        return { monat, betrag, aktiv };
+    function createData(monat, betrag, gesamt) {
+        return { monat, betrag, gesamt};
     }
 
+    const calcLogic = function (value, value2) {
+        setRow(Math.round(value / value2));
+    };
+
+    // const months = () => {
+    //     let monat = [];
+    //     for (let i = 1; i <= 12; i++) { logic for months } editing data for months that are uneven
+    //         monat.push(i);
+    //     }
+    //     return monat;
+    // };
+
+    function assignValue() {
+        setRow(value2);
+    }
+
+    function modalClick() {
+        assignValue();
+        handleClose()
+    }
+
+
     const rows = [
-        createData(row, Math.round(value / value2)),
-        createData('2', value),
-        createData('3', value),
-        createData('4', value),
-        createData('5', value),
+        createData(row, Math.round(value / value2)), //Divideds input trough month
     ];
+
+
+
 
     return (
         <div>
@@ -53,6 +76,7 @@ const Todolist = () => {
                     Ok
                 </Button>
             </Grid>
+
             <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
                     <TextField onChange={event => setValue2(event.target.value)} label="Monate" type="number" value={value2} />
@@ -60,7 +84,8 @@ const Todolist = () => {
                         <Button id="margin-normal" variant="contained" onClick={handleClose}>
                             Abbrechen
                         </Button>
-                        <Button variant="text" onClick={event => setRow(event.target.row)}>
+                        <Button variant="text" onClick={event => modalClick() }> 
+                        {/* setRow(event.target.value2) */}
                             Ok
                         </Button>
                     </Stack>
@@ -70,21 +95,20 @@ const Todolist = () => {
                 <Table sx={{ minWidth: 650 }}>
                     <TableHead>
                         <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell align="right">Monat</TableCell>
-                            <TableCell align="right">Betrag</TableCell>
-                            <TableCell align="right">Aktiv</TableCell>
+                            <TableCell align="right">Gesamt Betrag</TableCell>
+                            <TableCell align="right">Monate</TableCell>
+                            <TableCell align="right">Betrag / Monat</TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
+                    <TableBody >
                         {rows.map(row => (
                             <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell component="th" scope="row">
+                                {/* <TableCell component="th" scope="row">
                                     {row.name}
-                                </TableCell>
-                                <TableCell align="right">{row.monat}</TableCell>
-                                <TableCell align="right">{row.betrag}</TableCell>
-                                <TableCell align="right">{row.aktiv}</TableCell>
+                                </TableCell> */}
+                                <TableCell align="right">{value}€</TableCell>
+                                <TableCell align="right">{value2}</TableCell>
+                                <TableCell align="right">{row.betrag}€</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
