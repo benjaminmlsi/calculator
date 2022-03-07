@@ -54,32 +54,53 @@ const Todolist = () => {
         setRow(value2);
     }
 
+    // const Input = (event) => {
+    //       if (event.key === 'Enter') {
+    //         handleClose()
+    //       }
+    // }
+
+    // https://stackoverflow.com/questions/31272207/to-call-onchange-event-after-pressing-enter-key
+
+
     function modalClick() {
         assignValue();
-        handleClose()
+        handleClose();
     }
 
 
     const rows = [
-        createData(row, Math.round(value / value2)), //Divideds input trough month
+        createData(row, Math.round(value / value2)), //Divides input trough month
     ];
 
 
+   function handleKeyPress(e) {
+        if (e.key === 'Enter') {
+          handleClose()
+        }
+    }
 
+    //Ineficient, but works / dont forget that Textfield has to be in focus
+    function handleKeyPress2(e) {
+        if (e.key === 'Enter') {
+          handleOpen()
+        }
+    }
+ 
 
     return (
         <div>
             <h1> Calculator </h1>
             <Grid container direction="row" justifyContent="center" alignItems="center">
-                <TextField onChange={event => setValue(event.target.value)} label="Betrag:" type="number" value={value} />
+                <TextField placeholder="10€" onChange={event => setValue(event.target.value)} onKeyUp={handleKeyPress2} label="Betrag:" type="number" value={value} />
                 <Button onClick={handleOpen} margin="normal">
                     Ok
                 </Button>
             </Grid>
 
-            <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+            <Modal open={open} onClose={handleClose} onKeyUp={handleKeyPress} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
-                    <TextField onChange={event => setValue2(event.target.value)} label="Monate" type="number" value={value2} />
+                    <TextField onChange={event => setValue2(event.target.value)} label="Monate" type="number" required="true" value={value2} />
                     <Stack spacing={2} direction="row">
                         <Button id="margin-normal" variant="contained" onClick={handleClose}>
                             Abbrechen
